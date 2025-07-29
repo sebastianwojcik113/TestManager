@@ -14,8 +14,6 @@ class TestManager:
             self.connection.connect()
             all_passed = True
 
-
-
             for command in commands:
                 self.connection.send_command(command)
                 response = self.connection.receive_response(timeout=5)
