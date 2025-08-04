@@ -22,12 +22,14 @@ if __name__ == '__main__':
     # Start main Test Manager work
     #TODO wydzielić pobieranie sekwencji komend do osobnej funkcji/klasy
     commands = [
-        "{\"Command_ID\":1, \"Command\":\"ENABLE_WIFI\"}",
-        "{\"Command_ID\":2, \"Command\":\"WIFI_ADD_NETWORK\", \"SSID\":\"AndroidWifi\", \"SECURITY_TYPE\":\"OPEN\"}",
-        "{\"Command_ID\":2, \"Command\":\"WIFI_ADD_NETWORK\", \"SSID\":\"AndroidWifi_wrong\", \"SECURITY_TYPE\":\"WPA2\", \"PWD\":\"12345678\"}",
-        "{\"Command_ID\":2, \"Command\":\"WIFI_CONNECT\", \"SSID\":\"AndroidWifi_wrong\"}",
-        #"{\"Command_ID\":3, \"Command\":\"DISABLE_WIFI\"}",
-        # "{\"Command_ID\":4, \"Command\":\"CLOSE_CONNECTION\"}"
+        "{\"Command_ID\":1, \"Command\":\"ENABLE_WIFI\", \"Timeout\":10}",
+        "{\"Command_ID\":2, \"Command\":\"WIFI_ADD_NETWORK\", \"SSID\":\"AndroidWifi\", \"SECURITY_TYPE\":\"OPEN\", \"Timeout\":10}",
+        "{\"Command_ID\":3, \"Command\":\"WIFI_ADD_NETWORK\", \"SSID\":\"AndroidWifi_wrong\", \"SECURITY_TYPE\":\"WPA2\", \"PWD\":\"12345678\", \"Timeout\":10}",
+        "{\"Command_ID\":4, \"Command\":\"WIFI_CONNECT\", \"SSID\":\"AndroidWifi\", \"Timeout\":10}",
+        "{\"Command_ID\":5, \"Command\":\"WIFI_REMOVE_NETWORK\", \"SSID\":\"AndroidWifi_wrong\", \"Timeout\":10}",
+        "{\"Command_ID\":6, \"Command\":\"WIFI_REMOVE_NETWORK\", \"SSID\":\"AndroidWifi\", \"Timeout\":10}",
+        "{\"Command_ID\":7, \"Command\":\"DISABLE_WIFI\", \"Timeout\":10}",
+        # "{\"Command_ID\":8, \"Command\":\"CLOSE_CONNECTION\", \"Timeout\":10}"
     ]
 
     testManager = TestManager()
