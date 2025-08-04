@@ -17,7 +17,7 @@ class ConnectionHandler:
     def connect(self):
         print(f"[Info] Connecting to TestRunner at {self.host}:{self.port}")
         self.sock = socket.create_connection((self.host, self.port), timeout=10)
-        self.sock_file = self.sock.makefile('r')  # dla readline()
+        self.sock_file = self.sock.makefile('r')
         welcome = self.sock_file.readline()
         print(f"[TestRunner]: {welcome.strip()}")
 
@@ -27,6 +27,7 @@ class ConnectionHandler:
 
     def receive_response(self, expected_command_id, timeout):
         start_time = time.time()
+        #waiting for proper ACK response for desired time
         while time.time() - start_time < timeout:
             response = self.sock_file.readline()
             if not response:
@@ -39,8 +40,9 @@ class ConnectionHandler:
             except json.JSONDecodeError:
                 print(f"[Warning] Received non-JSON response: {response}")
                 continue
-
+            #check if response contains Ack_ID...
             if "Ack_ID" in json_format_response:
+                #if yes, then check if it equals expected ID
                 if json_format_response["Ack_ID"] == expected_command_id:
                     print(f"[TestRunner] ACK matched: {json_format_response}")
                     return json_format_response
