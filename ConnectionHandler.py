@@ -23,6 +23,8 @@ class ConnectionHandler:
 
     def send_command(self, cmd):
         print(f"[TestManager]: Sending command -> {cmd}")
+        if isinstance(cmd, dict):
+            cmd = json.dumps(cmd)
         self.sock.sendall((cmd + '\n').encode())
 
     def receive_response(self, expected_command_id, timeout):
