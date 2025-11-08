@@ -6,6 +6,7 @@ from LogCatcher import LogCatcher
 from TestManager import TestManager
 
 if __name__ == '__main__':
+    #some constant variables
     HOST_PORT = 5557  # port on PC
     DEVICE_PORT = 5557  # port on DUT
     EXPECTED_OWNER = "admin=com.example.testrunner/.MyDeviceAdminReceiver"
