@@ -14,15 +14,15 @@
   {
     "Command_ID": 3,
     "Command": "WIFI_ADD_NETWORK",
-    "SSID": "AndroidWifi_wrong",
+    "SSID": "Orange_Swiatlowod_9F82",
     "SECURITY_TYPE": "WPA2",
-    "PWD": "12345678",
+    "PWD": "swes1993",
     "Timeout": 10
   },
   {
     "Command_ID": 4,
     "Command": "WIFI_CONNECT",
-    "SSID": "AndroidWifi",
+    "SSID": "Orange_Swiatlowod_9F82",
     "Timeout": 10
   },
   {
