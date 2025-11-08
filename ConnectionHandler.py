@@ -52,7 +52,7 @@ class ConnectionHandler:
                     print(f"[TestRunner] Ignored ACK for other command: {json_format_response}")
                     continue
             else:
-                print(f"[TestRunner] Other message: {json_format_response}")
+                print(f"[TestRunner] Server message: {json_format_response}")
                 continue
 
         print(f"[Timeout] No ACK for Command_ID={expected_command_id} after {timeout}s")
