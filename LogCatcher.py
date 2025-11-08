@@ -22,8 +22,16 @@ class LogCatcher:
     def logcat_start(self, log_folder_path):
         log_path = os.path.join(log_folder_path, "logcat.txt")
         adb_command = ["adb", "-s", self.adb_serial, "logcat", "-v", "time"]
+        logcat_buffer_erase = ["adb", "-s", self.adb_serial, "logcat", "-c"]
         print(f"[LogCatcher] Starting logcat for: {self.adb_serial} ", "-->", log_path)
 
+        #try to erase logcat buffer to avoid old logs
+        try:
+            subprocess.Popen(logcat_buffer_erase, stdout=self.log_file, stderr=subprocess.STDOUT)
+        except Exception as e:
+            raise RuntimeError(f"[LogCatcher] Error when trying to flush logcat buffer: {e}")
+
+        # try to create a new file logcat.txt and write the logcat messages
         try:
             self.log_file = open(log_path, "ab")
             self.proc = subprocess.Popen(adb_command, stdout=self.log_file, stderr=subprocess.STDOUT)
