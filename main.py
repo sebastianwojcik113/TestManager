@@ -1,12 +1,8 @@
 import argparse
-import json
-import socket
-import subprocess
-import time
-from time import sleep
+import os
 
-import ConnectionHandler
 from DeviceOwnerHandler import DeviceOwnerHandler
+from LogCatcher import LogCatcher
 from TestManager import TestManager
 
 if __name__ == '__main__':
@@ -23,6 +19,11 @@ if __name__ == '__main__':
     script = args.script
     dut_serial = args.adb_serial
 
+    #Enable test logs collection
+    logCatcher = LogCatcher(ADB_SERIAL, script)
+    logCatcher.logcat_start(logCatcher.create_log_directory())
+
+
     # Check port forwarding to communicate with DUT
     do_handler = DeviceOwnerHandler(host_port=HOST_PORT, device_port=DEVICE_PORT, expected_owner=EXPECTED_OWNER, adb_serial=dut_serial)
     do_handler.forward_port(HOST_PORT,DEVICE_PORT)
@@ -34,3 +35,6 @@ if __name__ == '__main__':
     commands = testManager.load_commands_from_file(script)
     if commands != None:
         testManager.run_test_sequence(commands)
+
+    #Stop collecting the logs
+    logCatcher.logcat_stop()
