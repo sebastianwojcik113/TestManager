@@ -17,7 +17,9 @@ if __name__ == '__main__':
     parser.add_argument("--adb_serial", "-a", required=True, type=str)
     args = parser.parse_args()
     script = args.script
+    print(f"Script file name: {script}")
     dut_serial = args.adb_serial
+    print(f"DUT ADB serial: {dut_serial}")
 
     #Enable test logs collection
     logCatcher = LogCatcher(dut_serial, script)
