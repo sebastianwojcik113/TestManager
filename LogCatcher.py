@@ -36,7 +36,7 @@ class LogCatcher:
         try:
             self.log_file = open(log_path, "ab")
             self.logcat_proc = subprocess.Popen(adb_command, stdout=self.log_file, stderr=subprocess.STDOUT)
-            print(f"[LogCatcher] Logcat PID: {self.logcat_proc}")
+            print(f"[LogCatcher] Logcat PID: {self.logcat_proc.pid}")
         except FileNotFoundError:
             self.log_file.close()
             raise RuntimeError(f"[LogCatcher] Unable to open {log_path}. Make sure you have installed ADB")
