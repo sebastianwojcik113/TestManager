@@ -6,7 +6,6 @@ from LogCatcher import LogCatcher
 from TestManager import TestManager
 
 if __name__ == '__main__':
-    ADB_SERIAL = "emulator-5554"  #"R5CWB0XESCJ"
     HOST_PORT = 5557  # port on PC
     DEVICE_PORT = 5557  # port on DUT
     EXPECTED_OWNER = "admin=com.example.testrunner/.MyDeviceAdminReceiver"
@@ -20,7 +19,7 @@ if __name__ == '__main__':
     dut_serial = args.adb_serial
 
     #Enable test logs collection
-    logCatcher = LogCatcher(ADB_SERIAL, script)
+    logCatcher = LogCatcher(dut_serial, script)
     logCatcher.logcat_start(logCatcher.create_log_directory())
 
 
