@@ -7,7 +7,8 @@ class LogCatcher:
         self.adb_serial = adb_serial
         self.script = script_name
         self.log_file = None
-        self.proc = None
+        self.logcat_proc = None
+        self.logcat_flush = None
 
     def create_log_directory(self):
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
@@ -27,33 +28,34 @@ class LogCatcher:
 
         #try to erase logcat buffer to avoid old logs
         try:
-            subprocess.Popen(logcat_buffer_erase, stdout=self.log_file, stderr=subprocess.STDOUT)
+            self.logcat_flush = subprocess.Popen(logcat_buffer_erase, stdout=self.log_file, stderr=subprocess.STDOUT)
         except Exception as e:
             raise RuntimeError(f"[LogCatcher] Error when trying to flush logcat buffer: {e}")
 
         # try to create a new file logcat.txt and write the logcat messages
         try:
             self.log_file = open(log_path, "ab")
-            self.proc = subprocess.Popen(adb_command, stdout=self.log_file, stderr=subprocess.STDOUT)
+            self.logcat_proc = subprocess.Popen(adb_command, stdout=self.log_file, stderr=subprocess.STDOUT)
+            print(f"[LogCatcher] Logcat PID: {self.logcat_proc}")
         except FileNotFoundError:
             self.log_file.close()
             raise RuntimeError(f"[LogCatcher] Unable to open {log_path}. Make sure you have installed ADB")
         except Exception as e:
             raise RuntimeError(f"[LogCatcher] Unable to run logcat. Error details: {e}")
-        return self.proc, self.log_file
+        return self.logcat_proc, self.log_file
 
     def logcat_stop(self):
         print(f"[LogCatcher] Stopping logcat for {self.adb_serial}...")
         #check if logcat process exists at all
-        if self.proc:
+        if self.logcat_proc:
             try:
                 #try to terminate the process with timeout=3 seconds
-                self.proc.terminate()
-                self.proc.wait(timeout=3)
+                self.logcat_proc.terminate()
+                self.logcat_proc.wait(timeout=3)
             except subprocess.TimeoutExpired:
                 #if process is stuck or did not terminate for other reason -> force to kill
                 print("[LogCatcher] Unable to terminate logcat process, killing...")
-                self.proc.kill()
+                self.logcat_proc.kill()
             except Exception as e:
                 print(f"[LogCatcher] Error when trying to kill logcat process: {e}")
         else:
