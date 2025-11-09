@@ -1,18 +1,15 @@
 [
   {
-    "Command_ID": 1,
     "Command": "ENABLE_WIFI",
     "Timeout": 20
   },
   {
-    "Command_ID": 2,
     "Command": "WIFI_ADD_NETWORK",
     "SSID": "AndroidWifi",
     "SECURITY_TYPE": "OPEN",
     "Timeout": 10
   },
   {
-    "Command_ID": 3,
     "Command": "WIFI_ADD_NETWORK",
     "SSID": "Orange_Swiatlowod_9F82",
     "SECURITY_TYPE": "WPA2",
@@ -20,25 +17,30 @@
     "Timeout": 10
   },
   {
-    "Command_ID": 4,
     "Command": "WIFI_CONNECT",
     "SSID": "Orange_Swiatlowod_9F82",
     "Timeout": 10
   },
   {
-    "Command_ID": 5,
+    "Command": "DELAY",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_CHECK_SUPPLICANT_STATE",
+    "Expected_state": "COMPLETED",
+    "Timeout": 10
+  },
+  {
     "Command": "WIFI_REMOVE_NETWORK",
     "SSID": "Orange_Swiatlowod_9F82",
     "Timeout": 10
   },
   {
-    "Command_ID": 6,
     "Command": "WIFI_REMOVE_NETWORK",
     "SSID": "AndroidWifi",
     "Timeout": 10
   },
   {
-    "Command_ID": 7,
     "Command": "DISABLE_WIFI",
     "Timeout": 10
   }

@@ -26,9 +26,10 @@ class TestManager:
     def run_test_sequence(self, commands):
         self.connection.connect()
         
-        for command in commands:
+        for i, command in enumerate(commands, start=1):
             # command_json = json.load(command)
-            command_id = command.get("Command_ID")
+            command_id = i
+            command["Command_ID"] = command_id
             command_type = command.get("Command")
             timeout = command.get("Timeout", 10)
             # handle Delay command - just wait for desired time

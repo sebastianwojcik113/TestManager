@@ -1,0 +1,14 @@
+[
+  {
+    "Command": "ENABLE_WIFI",
+    "Timeout": 20
+  },
+  {
+    "Command": "WIFI_CLEAR_ALL",
+    "Timeout": 10
+  },
+  {
+    "Command": "DISABLE_WIFI",
+    "Timeout": 10
+  }
+]
