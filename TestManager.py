@@ -14,20 +14,27 @@ class TestManager:
             with open(filename) as test_scenario_json:
                 print(f"File {filename} loaded. Proceeding with test sequence...")
                 commands = json.load(test_scenario_json)
+                test_scenario_json.close()
                 return commands
         except OSError:
+            test_scenario_json.close()
             print(f"[Error] File {filename} not found!")
         except ValueError:
+            test_scenario_json.close()
             print(f"[Error] File {filename} is broken. Please check if file follows the JSON format!")
 
     def run_test_sequence(self, commands):
-        #TODO zaimplementować klasę pobierania sekwencji komend z pliku XML/JSON? 
         self.connection.connect()
+        
         for command in commands:
             # command_json = json.load(command)
             command_id = command.get("Command_ID")
             command_type = command.get("Command")
             timeout = command.get("Timeout", 10)
+            # handle Delay command - just wait for desired time
+            if command_type == "DELAY":
+                print(f"Start of delay timer, waiting for {timeout} seconds")
+                sleep(timeout)
 
             self.connection.send_command(command)
             response = self.connection.receive_response(command_id, timeout)

@@ -26,6 +26,10 @@ class DeviceOwnerHandler:
 
     #TODO Dodac obslugę wyjatku kiedy DUT nie jest autoryzowany do USB debuggingu
 
+    def remove_device_owner(self, deviceOwner):
+        cmd = self._adb_command("shell", "dpm", "remove-active-admin", deviceOwner)
+        subprocess.run(cmd, check=True)
+
     def check_device_owner(self, expected_owner):
         cmd = self._adb_command("shell", "dpm", "list-owners")
         result = subprocess.run(cmd,
