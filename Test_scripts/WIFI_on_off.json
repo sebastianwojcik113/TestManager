@@ -1,0 +1,15 @@
+[
+  {
+    "Command": "ENABLE_WIFI",
+    "Timeout": 20
+  },
+   {
+    "Command": "WIFI_CHECK_STATE",
+     "Expected_state": "WIFI_STATE_ENABLED",
+    "Timeout": 20
+  },
+  {
+    "Command": "DISABLE_WIFI",
+    "Timeout": 10
+  }
+]

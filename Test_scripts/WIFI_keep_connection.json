@@ -1,0 +1,37 @@
+[
+  {
+    "Command": "ENABLE_WIFI",
+    "Timeout": 20
+  },
+  {
+    "Command": "WIFI_ADD_NETWORK",
+    "SSID": "Galaxy Z Flip7",
+    "SECURITY_TYPE": "WPA2",
+    "PWD": "dupadupa",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_CONNECT",
+    "SSID": "Galaxy Z Flip7",
+    "Timeout": 10
+  },
+  {
+    "Command": "PROMISE_SUPPLICANT_STATE",
+    "Expected_state": "COMPLETED",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_DISCONNECT",
+    "SSID": "Galaxy Z Flip7",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_REMOVE_NETWORK",
+    "SSID": "Galaxy Z Flip7",
+    "Timeout": 10
+  },
+  {
+    "Command": "DISABLE_WIFI",
+    "Timeout": 10
+  }
+]

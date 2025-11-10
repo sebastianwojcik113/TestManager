@@ -28,10 +28,15 @@ class ConnectionHandler:
         self.sock.sendall((cmd + '\n').encode())
 
     def receive_response(self, expected_command_id, timeout):
+        self.sock.settimeout(timeout + 1) #1sec longer timeout for communication delay
         start_time = time.time()
         #waiting for proper ACK response for desired time
         while time.time() - start_time < timeout:
-            response = self.sock_file.readline()
+            response = None
+            try:
+                response = self.sock_file.readline()
+            except socket.timeout:
+                print("Waiting for response from the server...")
             if not response:
                 print("[Warning] Empty response (connection closed?)")
                 return None

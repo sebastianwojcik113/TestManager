@@ -44,6 +44,8 @@ if __name__ == '__main__':
     commands = testManager.load_commands_from_file(script)
     if commands != None:
         testManager.run_test_sequence(commands)
+    else:
+        print(f"Unable to read test sequnce from file: {script}")
 
     #Stop collecting the logs
     logCatcher.logcat_stop()
