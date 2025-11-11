@@ -1,0 +1,13 @@
+[
+  {
+    "DUT": {
+      "ADB_SERIAL": "R5CWB0XESCJ",
+      "PORT": "5557"
+    },
+    "AP": {
+      "IP": "192.168.1.9",
+      "USER": "admin",
+      "PWD": "PCVtest123$"
+    }
+  }
+]

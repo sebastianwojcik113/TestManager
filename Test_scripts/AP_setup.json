@@ -1,0 +1,12 @@
+[
+  {
+    "Command": "AP_SETUP",
+    "SSID": "Test_network",
+    "BAND": "2G",
+    "CHANNEL": "6",
+    "MODE": "ax",
+    "WIDTH": "40",
+    "SECURITY": "WPA2",
+    "PWD": "testing123"
+  }
+]

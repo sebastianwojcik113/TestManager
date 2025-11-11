@@ -4,7 +4,7 @@ import time
 
 
 class ConnectionHandler:
-    HOST_PORT = 5557  # port na PC
+    HOST_PORT = 5557  # port for communication
     HOST = 'localhost'
 
 

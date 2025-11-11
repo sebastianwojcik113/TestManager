@@ -1,0 +1,51 @@
+[
+  {
+    "Command": "AP_SETUP",
+    "SSID": "Test_network",
+    "BAND": "6G",
+    "CHANNEL": "37",
+    "MODE": "AX",
+    "WIDTH": "160",
+    "SECURITY": "WPA3",
+    "PWD": "testing123"
+  },
+  {
+    "Command": "ENABLE_WIFI",
+    "Timeout": 20
+  },
+  {
+    "Command": "WIFI_ADD_NETWORK",
+    "SSID": "Test_network",
+    "SECURITY_TYPE": "WPA3",
+    "PWD": "testing123",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_CONNECT",
+    "SSID": "Test_network",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_CHECK_SUPPLICANT_STATE",
+    "Expected_state": "COMPLETED",
+    "Timeout": 10
+  },
+  {
+    "Command": "DELAY",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_DISCONNECT",
+    "SSID": "Test_network",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_REMOVE_NETWORK",
+    "SSID": "Test_network",
+    "Timeout": 10
+  },
+  {
+    "Command": "DISABLE_WIFI",
+    "Timeout": 10
+  }
+]

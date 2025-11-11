@@ -1,7 +1,9 @@
 import argparse
 import json
 import os
+from fileinput import filename
 
+from ConfigReader import ConfigReader
 from DeviceOwnerHandler import DeviceOwnerHandler
 from LogCatcher import LogCatcher
 from TestManager import TestManager
@@ -15,20 +17,26 @@ if __name__ == '__main__':
     #Parse arguments (test script, adb serial?)
     parser = argparse.ArgumentParser()
     parser.add_argument("--script", "-s", required=True, type=str)
-    parser.add_argument("--adb_serial", "-a", required=True, type=str)
+    parser.add_argument("--config", "-c", required=True, type=str)
     args = parser.parse_args()
     script = args.script
     print(f"Script file name: {script}")
-    dut_serial = args.adb_serial
-    print(f"DUT ADB serial: {dut_serial}")
+    config = args.config
+    print(f"Config file name: {config}")
+
+    # Read the test bed configuration
+    configReader = ConfigReader(config)
+    configReader.read_config()
+    apconfig = configReader.get("AP")
+    dut = configReader.get("DUT")
 
     #Enable test logs collection
-    logCatcher = LogCatcher(dut_serial, script)
+    logCatcher = LogCatcher(dut["ADB_SERIAL"], script)
     logCatcher.logcat_start(logCatcher.create_log_directory())
 
 
     # Check port forwarding to communicate with DUT
-    do_handler = DeviceOwnerHandler(host_port=HOST_PORT, device_port=DEVICE_PORT, expected_owner=EXPECTED_OWNER, adb_serial=dut_serial)
+    do_handler = DeviceOwnerHandler(host_port=HOST_PORT, device_port=DEVICE_PORT, expected_owner=EXPECTED_OWNER, adb_serial=dut["ADB_SERIAL"])
     do_handler.forward_port(HOST_PORT,DEVICE_PORT)
     #Remove current Device Owner
     do_handler.remove_device_owner(EXPECTED_OWNER)
@@ -36,7 +44,7 @@ if __name__ == '__main__':
     do_handler.check_device_owner("admin=" + EXPECTED_OWNER)
 
     #Run initial test sequence to prepare DUT for testing
-    testManager = TestManager()
+    testManager = TestManager(apconfig)
     initial_commands = testManager.load_commands_from_file("./Initial_sequence.json")
     testManager.run_test_sequence(initial_commands)
 
@@ -49,3 +57,4 @@ if __name__ == '__main__':
 
     #Stop collecting the logs
     logCatcher.logcat_stop()
+

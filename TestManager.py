@@ -2,43 +2,58 @@ import json
 from time import sleep
 
 import ConnectionHandler
+from ApManager import ApManager
 
 
 class TestManager:
-    def __init__(self):
+    def __init__(self, apconfig, ap_params=None):
         self.connection = ConnectionHandler.ConnectionHandler()
+        self.ap_manager = None
         self.test_result = "NOT RUN"
+        self.apconfig = apconfig #dict
 
     def load_commands_from_file(self, filename):
         try:
             with open(filename) as test_scenario_json:
-                print(f"File {filename} loaded. Proceeding with test sequence...")
+                print(f"[INFO] File {filename} loaded. Proceeding with test sequence...")
                 commands = json.load(test_scenario_json)
                 test_scenario_json.close()
                 return commands
         except OSError:
             test_scenario_json.close()
-            print(f"[Error] File {filename} not found!")
+            print(f"[ERROR] File {filename} not found!")
         except ValueError:
             test_scenario_json.close()
-            print(f"[Error] File {filename} is broken. Please check if file follows the JSON format!")
+            print(f"[ERROR] File {filename} is broken. Please check if file follows the JSON format!")
 
     def run_test_sequence(self, commands):
         self.connection.connect()
-        
+        response = None
         for i, command in enumerate(commands, start=1):
             # command_json = json.load(command)
             command_id = i
             command["Command_ID"] = command_id
             command_type = command.get("Command")
             timeout = command.get("Timeout", 10)
+
+            # Run AP related commands locally, do not send to TestRunner
+            if command_type == "AP_SETUP":
+                self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
+                # try:
+                self.ap_manager.setup_ap(command)
+                print(f"[INFO] Command to setup AP sent")
+                response = {"Result": "COMPLETE", "Command_ID": command_id}
+                # except Exception as e:
+                #     response = {"Result": "ERROR", "Command_ID": command_id}
+                #     print(f"[ERROR] AP setup process failed, reason: {e}")
+
             # handle Delay command - just wait for desired time
-            if command_type == "DELAY":
+            elif command_type == "DELAY":
                 print(f"Start of delay timer, waiting for {timeout} seconds")
                 sleep(timeout)
-
-            self.connection.send_command(command)
-            response = self.connection.receive_response(command_id, timeout)
+            else:
+                self.connection.send_command(command)
+                response = self.connection.receive_response(command_id, timeout)
 
             if response is None:
                 print(f"[Error] No response for Command_ID={command_id} {command_type}")
