@@ -40,17 +40,30 @@ class TestManager:
             if command_type == "AP_SETUP":
                 self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
                 # try:
-                self.ap_manager.setup_ap(command)
+                #     self.ap_manager.setup_ap_basic(command)
+                #     print(f"[INFO] Command to setup AP sent")
+                #     response = {"Result": "COMPLETE", "Command_ID": command_id}
+                # except Exception as e:
+                #     response = {"Result": "ERROR", "Command_ID": command_id}
+                #     print(f"[ERROR] AP setup process failed, reason: {e}")
+                self.ap_manager.setup_ap_basic(command)
+                print(f"[INFO] Command to setup AP sent")
+                response = {"Result": "COMPLETE", "Command_ID": command_id}
+
+            elif command_type == "AP_SWITCH_RADIO":
+                self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
+                # try:
+                self.ap_manager.switch_ap_radio(command)
                 print(f"[INFO] Command to setup AP sent")
                 response = {"Result": "COMPLETE", "Command_ID": command_id}
                 # except Exception as e:
                 #     response = {"Result": "ERROR", "Command_ID": command_id}
                 #     print(f"[ERROR] AP setup process failed, reason: {e}")
-
             # handle Delay command - just wait for desired time
             elif command_type == "DELAY":
                 print(f"Start of delay timer, waiting for {timeout} seconds")
                 sleep(timeout)
+
             else:
                 self.connection.send_command(command)
                 response = self.connection.receive_response(command_id, timeout)

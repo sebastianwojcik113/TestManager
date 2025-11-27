@@ -1,10 +1,3 @@
-import time
-from telnetlib import EC
-from time import sleep
-from tkinter.tix import Select
-from xml.dom.xmlbuilder import Options
-
-import time
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -17,7 +10,6 @@ from selenium.common.exceptions import UnexpectedAlertPresentException, NoAlertP
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-WIRELESS_SETTINGS = ""
 AP_APPLY_CHANGES_TIMEOUT = 180
 # Map channel selection list - element IDs
 CHANNEL_PULLDOWNS = {
@@ -131,6 +123,11 @@ class ApController:
 
     def apply_and_wait(self, timeoout=300):
         try:
+            # Switch to iframe
+            iframe = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.ID, "formframe"))
+            )
+            self.driver.switch_to.frame(iframe)
             apply_button = self.driver.find_element(By.ID, "apply")
             apply_button.click()
             print(f"[INFO] Waiting for changes to be apllied...")
@@ -165,6 +162,47 @@ class ApController:
         # switch back to default context
         self.driver.switch_to.default_content()
 
+    def apply_and_wait_advanced(self, timeoout=300):
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
+        try:
+            apply_button = self.driver.find_element(By.ID, "apply")
+            apply_button.click()
+            print(f"[INFO] Waiting for changes to be apllied...")
+
+            try:
+                # Check if secuirty alert appeared
+                WebDriverWait(self.driver, 3).until(EC.alert_is_present())
+                alert = self.driver.switch_to.alert
+                print(f"[INFO] Alert from AP detected: {alert.text}")
+                alert.accept()
+                print(f"[INFO] Alert accepted")
+            except Exception:
+                # If alert not detected just continue
+                pass
+            WebDriverWait(self.driver, timeoout).until(
+                EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#target > div.subhead2"), "Wireless Settings")
+            )
+            print(f"[OK] Changes applied")
+        except UnexpectedAlertPresentException:
+            try:
+                alert = self.driver.switch_to.alert
+                print(f"[INFO] Alert from AP detected: {alert.text}")
+                alert.accept()
+                print("[INFO] Alert accepted")
+                WebDriverWait(self.driver, timeoout).until(
+                    EC.text_to_be_present_in_element((By.CSS_SELECTOR, "div.subhead2.page_title"), "Wireless Setup")
+                )
+                print(f"[OK] Changes applied")
+            except NoAlertPresentException:
+                print("[ERROR] Alert disappeared before it could be handled.")
+
+        # switch back to default context
+        self.driver.switch_to.default_content()
+
     def open_wireless_settings(self):
         wireless_menu_button = self.driver.find_element(By.ID,"basic_wireless")
         wireless_menu_button.click()
@@ -177,9 +215,86 @@ class ApController:
 
         # Wait for "Wireless Setup" text on page loaded
         WebDriverWait(self.driver, 10).until(
-            EC.text_to_be_present_in_element((By.CSS_SELECTOR, "div.subhead2.page_title"), "Wireless Setup")
+            EC.text_to_be_present_in_element((By.CSS_SELECTOR, "div.subhead2"), "Wireless Setup")
         )
         print("[OK] Wireless settings page loaded")
+        # switch back to default content
+        self.driver.switch_to.default_content()
+
+    def open_advanced_wireless_settings(self):
+        self.driver.switch_to.default_content()
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "topframe"))
+        )
+        self.driver.switch_to.frame(iframe)
+
+        advanced_wireless_tab = self.driver.find_element(By.ID, "advanced_label")
+        advanced_wireless_tab.click()
+        # switch back to default context
+        self.driver.switch_to.default_content()
+        advanced_wireless_button = self.driver.find_element(By.ID, "advanced_wireless")
+        # Check if "Wireless settings" button is visible, if not unfold "Advanced Setup" menu
+        try:
+            advanced_wireless_button = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "advanced_wireless")))
+            advanced_wireless_button.click()
+        except Exception as e:
+            print(f"[INFO] \"Wireless settings\" seems to be hidden, expanding \"Advanced setup\" menu")
+            advanced_setup = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "advanced_bt"))
+            )
+            advanced_setup.click()
+            advanced_wireless_button = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "advanced_wireless")))
+            advanced_wireless_button.click()
+            print(f"[DEBUG] Wireless settings button clicked")
+
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
+        # Wait for "Wireless Setup" text on page loaded DZIAŁA
+        WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.ID, "5g_wifi_settings")))
+
+        # Wait for "Wireless Setup" text on page loaded  DZIAŁA
+        WebDriverWait(self.driver, 10).until(
+            EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#target > table > tbody > tr:nth-child(2) > td > div > table > tbody > tr:nth-child(1) > td > a > b"), "Wireless Advanced Settings (2.4GHz b/g/n/ax)")
+        )
+        # NIE DZIALA - czekanie na fragemnt zaczynający sie od "Wireless..." dalej w zaleznosci od basic/advanced settings mamy ...Settings/Setup
+        # WebDriverWait(self.driver, 10).until(
+        #     EC.text_to_be_present_in_element((By.TAG_NAME, "subhead2"), "Wireless"))
+
+        radio_checkbox = self.driver.find_element(By.ID, "enable_ap_an_2")
+        print(f"[DEBUG] Radio checkbox found")
+        print("[OK] Advanced wireless settings page loaded")
+        # switch back to default context
+        self.driver.switch_to.default_content()
+
+    def switch_radio(self, band, enabled):
+        radio_checkbox_mapping = {
+            "2G": "enable_ap",
+            "5G": "enable_ap_an",
+            "6G": "enable_ap_an_2"
+        }
+        band = band.upper()
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
+        radio_checkbox_id = radio_checkbox_mapping[band]
+        radio_checkbox = self.driver.find_element(By.ID, radio_checkbox_id)
+        if enabled and not radio_checkbox.is_selected():
+            print(f"[DEBUG] Enabling radio for {band} interface")
+            radio_checkbox.click()
+            print(f"[DEBUG] {band} radio enabled")
+        elif not enabled and radio_checkbox.is_selected():
+            print(f"[DEBUG] Disabling radio for {band} interface")
+            radio_checkbox.click()
+            print(f"[DEBUG] {band} radio disabled")
+        # switch back to default context
+        self.driver.switch_to.default_content()
 
     def set_channel(self, band, channel):
         channels = {
@@ -207,6 +322,11 @@ class ApController:
         band = band.upper()
         if band not in CHANNEL_PULLDOWNS:
             raise ValueError(f"[ERROR] Unrecognized band value: {band}")
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
 
         pulldown_list = self.driver.find_element(By.ID, str(CHANNEL_PULLDOWNS[band]))
         select = Select(pulldown_list)
@@ -215,11 +335,19 @@ class ApController:
             print(f"[OK] Channel selected: {channel}")
         except Exception as e:
             print(f"[ERROR] Unable to select {channel} for band {band}")
+        # switch back to default context
+        self.driver.switch_to.default_content()
 
     def set_mode(self, band, mode, width):
         band = band.upper()
         mode = mode.upper()
         width = width
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
+
         # check if desired combination is possible to set
         possible_combinations = [k for k in MODE_MAPPING.keys() if k[0] == band and k[1] == mode and k[2] == width]
         if not possible_combinations:
@@ -263,9 +391,18 @@ class ApController:
         except Exception as e:
             print(f"[ERROR] Error when trying to select mode: {e}")
 
+        # switch back to default context
+        self.driver.switch_to.default_content()
+
     def set_security(self, band, security_type, password=None):
         band = band.upper()
         security_type = security_type.upper()
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
+
         if band not in SECURITY_MAPPING:
             raise ValueError(f"[ERROR] Unrecognized band: {band}")
         band_mapping = SECURITY_MAPPING[band]
@@ -283,9 +420,17 @@ class ApController:
                 raise ValueError(f"[ERROR] Invalid password: must be at least 8 ASCII characters.")
             print(f"[INFO] Password provided for security type {security_type}, setting a new password...")
             self.set_password(band, password)
+        # switch back to default context
+        self.driver.switch_to.default_content()
 
     def set_password(self, band, password):
         band = band.upper()
+
+        # # Switch to iframe
+        # iframe = WebDriverWait(self.driver, 10).until(
+        #     EC.presence_of_element_located((By.ID, "formframe"))
+        # )
+        # self.driver.switch_to.frame(iframe)
         if band not in PASSWORD_FIELDS:
             raise ValueError(f"[ERROR] Unrecognized band: {band}")
         password_field_id = PASSWORD_FIELDS[band]
@@ -305,6 +450,9 @@ class ApController:
         except Exception as e:
             print(f"[ERROR] Unable to set password: {e}")
 
+        # switch back to default context
+        self.driver.switch_to.default_content()
+
     def set_ssid(self, band, ssid):
         band = band.upper()
         if band not in SSID_ELEMENTS:
@@ -312,7 +460,11 @@ class ApController:
         if not ssid or len(ssid) > 32:
             raise ValueError(f"[ERROR] Invalid SSID: must be 1–32 characters long.")
         ssid_field_id = SSID_ELEMENTS[band]
-
+        # Switch to iframe
+        iframe = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "formframe"))
+        )
+        self.driver.switch_to.frame(iframe)
         try:
             WebDriverWait(self.driver, 5).until(
                 EC.visibility_of_element_located((By.ID, ssid_field_id))
@@ -323,9 +475,25 @@ class ApController:
             print(f"[OK] SSID for interface {band} set to: {ssid}")
         except Exception as e:
             print(f"[ERROR] Unable to set SSID: {e}")
+        # switch back to default context
+        self.driver.switch_to.default_content()
 
     def close(self):
         self.driver.quit()
         print("[INFO] Selenium driver closed")
 
-
+# Simple main for testing purpose
+if __name__ == '__main__':
+    object = ApController("192.168.1.9", "admin", "PCVtest123$", False )
+    object.connect_and_login()
+    object.open_wireless_settings()
+    object.set_ssid("2G", "testSSID")
+    object.set_channel("2G", "6")
+    object.set_security("2G", "WPA2", "123456789")
+    object.set_security("6G", "WPA3", "testing123")
+    object.set_channel("5G", "36")
+    # object.open_advanced_wireless_settings()
+    # object.apply_and_wait_advanced()
+    # object.switch_radio("6G", False)
+    # object.apply_and_wait()
+    object.close()

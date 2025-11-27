@@ -8,6 +8,11 @@
       "IP": "192.168.1.9",
       "USER": "admin",
       "PWD": "PCVtest123$"
+    },
+    "SNIFFER": {
+      "INTERFACE": "mon0",
+      "CHANNEL": "1",
+      "WIDTH": "20"
     }
   }
 ]

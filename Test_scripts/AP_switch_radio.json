@@ -1,0 +1,7 @@
+[
+  {
+    "Command": "AP_SWITCH_RADIO",
+    "BAND": "2G",
+    "ENABLED": "False"
+  }
+]

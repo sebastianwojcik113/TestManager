@@ -1,7 +1,4 @@
 import argparse
-import json
-import os
-from fileinput import filename
 
 from ConfigReader import ConfigReader
 from DeviceOwnerHandler import DeviceOwnerHandler
@@ -30,6 +27,9 @@ if __name__ == '__main__':
     apconfig = configReader.get("AP")
     dut = configReader.get("DUT")
 
+    #Add checking if ADB serial is available
+    #Add checking if AP is reachable - ping test
+
     #Enable test logs collection
     logCatcher = LogCatcher(dut["ADB_SERIAL"], script)
     logCatcher.logcat_start(logCatcher.create_log_directory())
@@ -37,13 +37,21 @@ if __name__ == '__main__':
 
     # Check port forwarding to communicate with DUT
     do_handler = DeviceOwnerHandler(host_port=HOST_PORT, device_port=DEVICE_PORT, expected_owner=EXPECTED_OWNER, adb_serial=dut["ADB_SERIAL"])
+    if not do_handler.check_device_availability():
+        print(f"[ERROR] Device not available. Stopping the run...")
+        exit(1)
     do_handler.forward_port(HOST_PORT,DEVICE_PORT)
-    #Remove current Device Owner
-    do_handler.remove_device_owner(EXPECTED_OWNER)
-    # Check if DO is already set
-    do_handler.check_device_owner("admin=" + EXPECTED_OWNER)
+    if do_handler.check_device_owner(EXPECTED_OWNER):
+        # Remove current Device Owner
+        do_handler.remove_device_owner(EXPECTED_OWNER)
+    # Install Test Runner apk
+    do_handler.install_TR_apk()
+    do_handler.set_device_owner(EXPECTED_OWNER)
+    do_handler.run_TR_apk()
+
 
     #Run initial test sequence to prepare DUT for testing
+
     testManager = TestManager(apconfig)
     initial_commands = testManager.load_commands_from_file("./Initial_sequence.json")
     testManager.run_test_sequence(initial_commands)
@@ -55,6 +63,8 @@ if __name__ == '__main__':
     else:
         print(f"Unable to read test sequnce from file: {script}")
 
+    #Remove Device Owner permissions
+    do_handler.remove_device_owner(EXPECTED_OWNER)
     #Stop collecting the logs
     logCatcher.logcat_stop()
 

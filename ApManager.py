@@ -10,7 +10,7 @@ class ApManager:
         self.ap_controller = None
         self.headless = headless
 
-    def setup_ap(self, ap_params):
+    def setup_ap_basic(self, ap_params):
         try:
             band = ap_params.get("BAND")
             ssid = ap_params.get("SSID")
@@ -42,5 +42,12 @@ class ApManager:
         self.ap_controller.apply_and_wait()
         self.ap_controller.close()
 
-
-
+    def switch_ap_radio(self, command):
+        band = None
+        enabled = None
+        try:
+            band = command.get("BAND")
+            enabled = command.get("ENABLED")
+        except KeyError as e:
+            print(f"[ERROR] Unable to find required parameter: {e}. Check the command parameters.")
+        self.ap_controller.switch_radio(band, enabled)

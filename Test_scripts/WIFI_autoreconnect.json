@@ -21,12 +21,12 @@
     "Timeout": 10
   },
   {
-    "Command": "WAIT_FOR_SUPPLICANT_STATE",
+    "Command": "WIFI_WAIT_FOR_SUPPLICANT_STATE",
     "Expected_state": "DISCONNECTED",
     "Timeout": 10
   },
   {
-    "Command": "WAIT_FOR_SUPPLICANT_STATE",
+    "Command": "WIFI_WAIT_FOR_SUPPLICANT_STATE",
     "Expected_state": "COMPLETED",
     "Timeout": 15
   },
