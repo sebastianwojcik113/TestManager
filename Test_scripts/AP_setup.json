@@ -2,11 +2,11 @@
   {
     "Command": "AP_SETUP",
     "SSID": "Test_network",
-    "BAND": "2G",
-    "CHANNEL": "6",
+    "BAND": "6G",
+    "CHANNEL": "53",
     "MODE": "ax",
     "WIDTH": "40",
-    "SECURITY": "WPA2",
+    "SECURITY": "WPA3",
     "PWD": "testing123"
   }
 ]

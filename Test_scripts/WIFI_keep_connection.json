@@ -1,13 +1,23 @@
 [
   {
+    "Command": "AP_SETUP",
+    "SSID": "Test_network",
+    "BAND": "5G",
+    "CHANNEL": "40",
+    "MODE": "AX",
+    "WIDTH": "160",
+    "SECURITY": "WPA2",
+    "PWD": "testing123"
+  },
+  {
     "Command": "ENABLE_WIFI",
     "Timeout": 20
   },
   {
     "Command": "WIFI_ADD_NETWORK",
-    "SSID": "Galaxy Z Flip7",
+    "SSID": "Test_network",
     "SECURITY_TYPE": "WPA2",
-    "PWD": "dupadupa",
+    "PWD": "testing123",
     "Timeout": 10
   },
   {
@@ -22,12 +32,12 @@
   },
   {
     "Command": "WIFI_DISCONNECT",
-    "SSID": "Galaxy Z Flip7",
+    "SSID": "Test_network",
     "Timeout": 10
   },
   {
     "Command": "WIFI_REMOVE_NETWORK",
-    "SSID": "Galaxy Z Flip7",
+    "SSID": "Test_network",
     "Timeout": 10
   },
   {

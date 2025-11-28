@@ -32,6 +32,7 @@ SSID_ELEMENTS = {
 
 #Map mode - width comnbinations -> element's text
 MODE_MAPPING = {
+    #(band, mode, width, ax_enabled?): mode_on_list
     # 2.4 GHz
     ("2G", "G", "20", False): "Up to 54 Mbps",
     ("2G", "N", "20", False): "Up to 433 Mbps",
@@ -285,14 +286,22 @@ class ApController:
         self.driver.switch_to.frame(iframe)
         radio_checkbox_id = radio_checkbox_mapping[band]
         radio_checkbox = self.driver.find_element(By.ID, radio_checkbox_id)
-        if enabled and not radio_checkbox.is_selected():
-            print(f"[DEBUG] Enabling radio for {band} interface")
-            radio_checkbox.click()
-            print(f"[DEBUG] {band} radio enabled")
-        elif not enabled and radio_checkbox.is_selected():
-            print(f"[DEBUG] Disabling radio for {band} interface")
-            radio_checkbox.click()
-            print(f"[DEBUG] {band} radio disabled")
+        enabled = eval(enabled)
+        if enabled:
+            if radio_checkbox.is_selected():
+                print(f"[DEBUG] Radio for {band} interface already enabled")
+            else:
+                print(f"[DEBUG] Radio for {band} interface disabled. Attempting to enable...")
+                radio_checkbox.click()
+                print(f"[DEBUG] {band} radio enabled")
+        else:
+            if radio_checkbox.is_selected():
+                print(f"[DEBUG] Radio for {band} interface enabled. Attempting to disable...")
+                radio_checkbox.click()
+                print(f"[DEBUG] {band} radio disabled")
+            else:
+                print(f"[DEBUG] Radio for {band} interface already disabled")
+
         # switch back to default context
         self.driver.switch_to.default_content()
 
@@ -335,6 +344,7 @@ class ApController:
             print(f"[OK] Channel selected: {channel}")
         except Exception as e:
             print(f"[ERROR] Unable to select {channel} for band {band}")
+            raise
         # switch back to default context
         self.driver.switch_to.default_content()
 
@@ -349,8 +359,12 @@ class ApController:
         self.driver.switch_to.frame(iframe)
 
         # check if desired combination is possible to set
-        possible_combinations = [k for k in MODE_MAPPING.keys() if k[0] == band and k[1] == mode and k[2] == width]
+        possible_combinations = []
+        for key in MODE_MAPPING.keys():
+            if key[0] == band and key[1] == mode and key[2] == width:
+                possible_combinations.append(key)
         if not possible_combinations:
+            print(f"[ERROR] Combination of parameters is not supported for band {band}: {mode, width}. Please check the parameters once again")
             raise ValueError(f"[ERROR] Unsupported combination: {(band, mode, width)}")
         ax_enabled = False
         target_mode = None
@@ -376,6 +390,7 @@ class ApController:
                     print("[OK] AX mode disabled")
         except Exception as e:
             print(f"[ERROR] Unable to find AX checkbox")
+            raise
 
 
         mode_list = self.driver.find_element(By.ID, MODE_OPTIONS[band])
@@ -483,17 +498,17 @@ class ApController:
         print("[INFO] Selenium driver closed")
 
 # Simple main for testing purpose
-if __name__ == '__main__':
-    object = ApController("192.168.1.9", "admin", "PCVtest123$", False )
-    object.connect_and_login()
-    object.open_wireless_settings()
-    object.set_ssid("2G", "testSSID")
-    object.set_channel("2G", "6")
-    object.set_security("2G", "WPA2", "123456789")
-    object.set_security("6G", "WPA3", "testing123")
-    object.set_channel("5G", "36")
-    # object.open_advanced_wireless_settings()
-    # object.apply_and_wait_advanced()
-    # object.switch_radio("6G", False)
-    # object.apply_and_wait()
-    object.close()
+# if __name__ == '__main__':
+#     object = ApController("192.168.1.9", "admin", "PCVtest123$", False )
+#     object.connect_and_login()
+#     object.open_wireless_settings()
+#     object.set_ssid("2G", "testSSID")
+#     object.set_channel("2G", "6")
+#     object.set_security("2G", "WPA2", "123456789")
+#     object.set_security("6G", "WPA3", "testing123")
+#     object.set_channel("5G", "36")
+#     # object.open_advanced_wireless_settings()
+#     # object.apply_and_wait_advanced()
+#     # object.switch_radio("6G", False)
+#     # object.apply_and_wait()
+#     object.close()

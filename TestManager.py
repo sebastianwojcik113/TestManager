@@ -39,26 +39,23 @@ class TestManager:
             # Run AP related commands locally, do not send to TestRunner
             if command_type == "AP_SETUP":
                 self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
-                # try:
-                #     self.ap_manager.setup_ap_basic(command)
-                #     print(f"[INFO] Command to setup AP sent")
-                #     response = {"Result": "COMPLETE", "Command_ID": command_id}
-                # except Exception as e:
-                #     response = {"Result": "ERROR", "Command_ID": command_id}
-                #     print(f"[ERROR] AP setup process failed, reason: {e}")
-                self.ap_manager.setup_ap_basic(command)
-                print(f"[INFO] Command to setup AP sent")
-                response = {"Result": "COMPLETE", "Command_ID": command_id}
+                try:
+                    self.ap_manager.setup_ap_basic(command)
+                    print(f"[INFO] Command \"AP_SETUP\" sent to AP")
+                    response = {"Result": "COMPLETE", "Command_ID": command_id}
+                except Exception as e:
+                    response = {"Result": "ERROR", "Command_ID": command_id}
+                    print(f"[ERROR] AP setup process failed, reason: {e}")
 
             elif command_type == "AP_SWITCH_RADIO":
                 self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
-                # try:
-                self.ap_manager.switch_ap_radio(command)
-                print(f"[INFO] Command to setup AP sent")
-                response = {"Result": "COMPLETE", "Command_ID": command_id}
-                # except Exception as e:
-                #     response = {"Result": "ERROR", "Command_ID": command_id}
-                #     print(f"[ERROR] AP setup process failed, reason: {e}")
+                try:
+                    self.ap_manager.switch_ap_radio(command)
+                    print(f"[INFO] Command \"AP_SWITCH_RADIO\" sent top AP")
+                    response = {"Result": "COMPLETE", "Command_ID": command_id}
+                except Exception as e:
+                    response = {"Result": "ERROR", "Command_ID": command_id}
+                    print(f"[ERROR] AP switch radio failed, reason: {e}")
             # handle Delay command - just wait for desired time
             elif command_type == "DELAY":
                 print(f"Start of delay timer, waiting for {timeout} seconds")
@@ -88,3 +85,28 @@ class TestManager:
 
         print(f"[{self.test_result}] Test finished with result: {self.test_result}")
         self.connection.close()
+
+#simple main class for testing purpose
+# if __name__ == '__main__':
+#     ap = """
+#         {
+#       "IP": "192.168.1.9",
+#       "USER": "admin",
+#       "PWD": "PCVtest123$"
+#     }
+#     """
+#     params = """{
+#         "Command": "AP_SETUP",
+#         "SSID": "Test_network",
+#         "BAND": "6G",
+#         "CHANNEL": "36",
+#         "MODE": "ac",
+#         "WIDTH": "40",
+#         "SECURITY": "open",
+#         "PWD": "testing123"
+#         }"""
+#     ap_params = json.loads(params)
+#     ap_config = json.loads(ap)
+#     object = TestManager(ap_config, ap_params)
+#     commands = object.load_commands_from_file("Test_scripts/AP_setup.json")
+#     object.run_test_sequence(commands)

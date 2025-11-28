@@ -1,3 +1,4 @@
+import json
 from pkgutil import walk_packages
 
 from ApController import ApController
@@ -22,11 +23,9 @@ class ApManager:
                 password = ap_params.get("PWD")
             else:
                 password = None
-            # password = ap_params.get("PWD", None)
-            print(ap_params)
         except KeyError as e:
             print(f"[ERROR] Unable to find element in AP configuration: {e}")
-            return
+            raise
 
         self.ap_controller = ApController(self.ap_ip, self.username, self.password)
         self.ap_controller.connect_and_login()
@@ -45,9 +44,30 @@ class ApManager:
     def switch_ap_radio(self, command):
         band = None
         enabled = None
+        self.ap_controller = ApController(self.ap_ip, self.username, self.password)
+        self.ap_controller.connect_and_login()
+        self.ap_controller.open_advanced_wireless_settings()
         try:
             band = command.get("BAND")
             enabled = command.get("ENABLED")
         except KeyError as e:
             print(f"[ERROR] Unable to find required parameter: {e}. Check the command parameters.")
+            raise
         self.ap_controller.switch_radio(band, enabled)
+        self.ap_controller.apply_and_wait_advanced()
+
+# Simple main for testing purpose
+# if __name__ == '__main__':
+#     json_string = """{
+#     "Command": "AP_SETUP",
+#     "SSID": "Test_network",
+#     "BAND": "6G",
+#     "CHANNEL": "36",
+#     "MODE": "ac",
+#     "WIDTH": "40",
+#     "SECURITY": "open",
+#     "PWD": "testing123"
+#     }"""
+#     ap_params = json.loads(json_string)
+#     object = ApManager("192.168.1.9", "admin", "PCVtest123$", False)
+#     object.setup_ap_basic(ap_params)

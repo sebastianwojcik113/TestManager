@@ -1,11 +1,11 @@
 [
-  {
+ {
     "Command": "AP_SETUP",
-    "SSID": "Test_network",
-    "BAND": "6G",
-    "CHANNEL": "37",
+    "SSID": "TEST_5G_80MHz",
+    "BAND": "5G",
+    "CHANNEL": "36",
     "MODE": "AX",
-    "WIDTH": "160",
+    "WIDTH": "80",
     "SECURITY": "WPA3",
     "PWD": "testing123"
   },
@@ -15,15 +15,15 @@
   },
   {
     "Command": "WIFI_ADD_NETWORK",
-    "SSID": "Test_network",
+    "SSID": "TEST_5G_80MHz",
     "SECURITY_TYPE": "WPA3",
     "PWD": "testing123",
     "Timeout": 10
   },
   {
     "Command": "WIFI_CONNECT",
-    "SSID": "Test_network",
-    "Timeout": 10
+    "SSID": "TEST_5G_80MHz",
+    "Timeout": 20
   },
   {
     "Command": "WIFI_CHECK_SUPPLICANT_STATE",
@@ -36,12 +36,12 @@
   },
   {
     "Command": "WIFI_DISCONNECT",
-    "SSID": "Test_network",
+    "SSID": "TEST_5G_80MHz",
     "Timeout": 10
   },
   {
     "Command": "WIFI_REMOVE_NETWORK",
-    "SSID": "Test_network",
+    "SSID": "TEST_5G_80MHz",
     "Timeout": 10
   },
   {
