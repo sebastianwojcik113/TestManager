@@ -1,12 +1,11 @@
 [
   {
     "Command": "AP_SETUP",
-    "SSID": "Test_network",
-    "BAND": "6G",
-    "CHANNEL": "53",
-    "MODE": "ax",
-    "WIDTH": "40",
-    "SECURITY": "WPA3",
-    "PWD": "testing123"
+    "SSID": "TEST_5G_CH36_80MHz",
+    "BAND": "5G",
+    "CHANNEL": "36",
+    "MODE": "AC",
+    "WIDTH": "80",
+    "SECURITY": "OPEN"
   }
 ]

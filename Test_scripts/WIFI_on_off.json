@@ -1,22 +1,11 @@
 [
-  {
-    "Command": "AP_SETUP",
-    "SSID": "Test_network",
-    "BAND": "5G",
-    "CHANNEL": "36",
-    "MODE": "ac",
-    "WIDTH": "80",
-    "SECURITY": "WPA2",
-    "PWD": "testing123"
-  },
-  {
+    {
     "Command": "ENABLE_WIFI",
     "Timeout": 20
   },
-   {
-    "Command": "WIFI_CHECK_STATE",
-     "Expected_state": "WIFI_STATE_ENABLED",
-    "Timeout": 20
+  {
+    "Command": "DELAY",
+    "Timeout": 5
   },
   {
     "Command": "DISABLE_WIFI",

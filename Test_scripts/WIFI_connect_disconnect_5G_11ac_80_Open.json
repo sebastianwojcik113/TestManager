@@ -1,0 +1,49 @@
+[
+ {
+    "Command": "AP_SETUP",
+    "SSID": "TEST_5G_CH36_80MHz",
+    "BAND": "5G",
+    "CHANNEL": "36",
+    "MODE": "AC",
+    "WIDTH": "80",
+    "SECURITY": "OPEN"
+  },
+  {
+    "Command": "ENABLE_WIFI",
+    "Timeout": 20
+  },
+  {
+    "Command": "WIFI_ADD_NETWORK",
+    "SSID": "TEST_5G_CH36_80MHz",
+    "SECURITY_TYPE": "WPA3",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_CONNECT",
+    "SSID": "TEST_5G_CH36_80MHz",
+    "Timeout": 20
+  },
+  {
+    "Command": "WIFI_CHECK_SUPPLICANT_STATE",
+    "Expected_state": "COMPLETED",
+    "Timeout": 10
+  },
+  {
+    "Command": "DELAY",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_DISCONNECT",
+    "SSID": "TEST_5G_CH36_80MHz",
+    "Timeout": 10
+  },
+  {
+    "Command": "WIFI_REMOVE_NETWORK",
+    "SSID": "TEST_5G_CH36_80MHz",
+    "Timeout": 10
+  },
+  {
+    "Command": "DISABLE_WIFI",
+    "Timeout": 10
+  }
+]

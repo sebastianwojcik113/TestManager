@@ -1,14 +1,5 @@
 [
-  {
-    "Command": "AP_SETUP",
-    "SSID": "Test_network",
-    "BAND": "5G",
-    "CHANNEL": "40",
-    "MODE": "AX",
-    "WIDTH": "160",
-    "SECURITY": "WPA2",
-    "PWD": "testing123"
-  },
+
   {
     "Command": "ENABLE_WIFI",
     "Timeout": 20
@@ -22,11 +13,11 @@
   },
   {
     "Command": "WIFI_CONNECT",
-    "SSID": "Galaxy Z Flip7",
+    "SSID": "Test_network",
     "Timeout": 10
   },
   {
-    "Command": "PROMISE_SUPPLICANT_STATE",
+    "Command": "WIFI_PROMISE_SUPPLICANT_STATE",
     "Expected_state": "COMPLETED",
     "Timeout": 10
   },

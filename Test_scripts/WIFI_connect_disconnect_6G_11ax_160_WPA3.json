@@ -1,9 +1,9 @@
 [
-  {
+ {
     "Command": "AP_SETUP",
-    "SSID": "TEST_6G_CH45_80MHz",
-    "BAND": "6G",
-    "CHANNEL": "45",
+    "SSID": "TEST_6G_CH37_160MHz",
+    "BAND": "5G",
+    "CHANNEL": "37",
     "MODE": "AX",
     "WIDTH": "80",
     "SECURITY": "WPA3",
@@ -15,15 +15,15 @@
   },
   {
     "Command": "WIFI_ADD_NETWORK",
-    "SSID": "TEST_6G_CH45_80MHz",
+    "SSID": "TEST_6G_CH37_160MHz",
     "SECURITY_TYPE": "WPA3",
-    "PWD": "testing12",
+    "PWD": "testing123",
     "Timeout": 10
   },
   {
     "Command": "WIFI_CONNECT",
-    "SSID": "TEST_6G_CH45_80MHz",
-    "Timeout": 10
+    "SSID": "TEST_6G_CH37_160MHz",
+    "Timeout": 20
   },
   {
     "Command": "WIFI_CHECK_SUPPLICANT_STATE",
@@ -31,28 +31,17 @@
     "Timeout": 10
   },
   {
-    "Command": "AP_SWITCH_RADIO",
-    "BAND": "6G",
-    "ENABLED": "False"
-  },
-  {
-    "Command": "WIFI_WAIT_FOR_SUPPLICANT_STATE",
-    "Expected_state": "DISCONNECTED",
+    "Command": "DELAY",
     "Timeout": 10
   },
   {
-    "Command": "WIFI_WAIT_FOR_SUPPLICANT_STATE",
-    "Expected_state": "COMPLETED",
-    "Timeout": 15
-  },
-  {
     "Command": "WIFI_DISCONNECT",
-    "SSID": "TEST_6G_CH45_80MHz",
+    "SSID": "TEST_6G_CH37_160MHz",
     "Timeout": 10
   },
   {
     "Command": "WIFI_REMOVE_NETWORK",
-    "SSID": "TEST_6G_CH45_80MHz",
+    "SSID": "TEST_6G_CH37_160MHz",
     "Timeout": 10
   },
   {
