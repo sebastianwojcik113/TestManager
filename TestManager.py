@@ -3,12 +3,14 @@ from time import sleep
 
 import ConnectionHandler
 from ApManager import ApManager
+from IperfManager import IperfManager
 
 
 class TestManager:
     def __init__(self, apconfig, ap_params=None):
         self.connection = ConnectionHandler.ConnectionHandler()
         self.ap_manager = None
+        self.iperf_manager = None
         self.test_result = "NOT RUN"
         self.apconfig = apconfig #dict
 
@@ -56,6 +58,27 @@ class TestManager:
                 except Exception as e:
                     response = {"Result": "ERROR", "Command_ID": command_id}
                     print(f"[ERROR] AP switch radio failed, reason: {e}")
+
+            elif command_type == "RUN_TRAFFIC":
+                self.iperf_manager = IperfManager(command)
+                try:
+                    result = self.iperf_manager.run_iperf_traffic()
+                    # stats["Result"] = PASS / FAIL
+                    if result["Result"] == "PASS":
+                        response = {"Result": "COMPLETE", "Command_ID": command_id}
+                        print(f"[PASS] Iperf test passed: {result}")
+
+                    else:
+                        response = {"Result": "ERROR", "Command_ID": command_id}
+                        print(f"[FAIL] Iperf test failed: {result}")
+
+                except Exception as e:
+                    response = {
+                        "Result": "ERROR",
+                        "Command_ID": command_id,
+                        "Reason": str(e)
+                    }
+
             # handle Delay command - just wait for desired time
             elif command_type == "DELAY":
                 print(f"Start of delay timer, waiting for {timeout} seconds")
