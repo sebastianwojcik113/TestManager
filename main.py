@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     #Enable test logs collection
     logCatcher = LogCatcher(dut["ADB_SERIAL"], script)
-    logCatcher.logcat_start(logCatcher.create_log_directory())
+    log_folder_path = logCatcher.logcat_start(logCatcher.create_log_directory())
 
 
     # Check port forwarding to communicate with DUT
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     #Run initial test sequence to prepare DUT for testing
 
-    testManager = TestManager(apconfig)
+    testManager = TestManager(apconfig, log_folder_path)
     initial_commands = testManager.load_commands_from_file("./Initial_sequence.json")
     testManager.run_test_sequence(initial_commands)
 

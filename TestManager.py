@@ -3,16 +3,17 @@ from time import sleep
 
 import ConnectionHandler
 from ApManager import ApManager
-from IperfManager import IperfManager
+from IperfManager_old import IperfManager
 
 
 class TestManager:
-    def __init__(self, apconfig, ap_params=None):
+    def __init__(self, apconfig, log_folder_path, ap_params=None):
         self.connection = ConnectionHandler.ConnectionHandler()
         self.ap_manager = None
         self.iperf_manager = None
         self.test_result = "NOT RUN"
         self.apconfig = apconfig #dict
+        self.log_folder_path = log_folder_path
 
     def load_commands_from_file(self, filename):
         try:

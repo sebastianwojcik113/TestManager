@@ -2,7 +2,7 @@ import subprocess
 import re
 import time
 
-import iperf3_fixed as iperf3
+import iperf3
 
 IPERF_PATH = "/data/local/tmp/iperf3.9"
 IPERF_PORT = "5201"
@@ -140,6 +140,7 @@ class IperfManager:
             print(f"Transferred data     {round(result.received_bytes / 1e6, 2)} MB")
 
         print(f"Avg bitrate          {measured:.2f} Mbps")
+        print(f"Retransmissions:     {result.retransmissions}")
 
         passed = self._check_expected_bitrate(measured)
 
@@ -174,7 +175,7 @@ class IperfManager:
             return True
         else:
             print(
-                f"[FAIL] Bitrate TOO LOW: {measured_mbps:.2f} Mbps "
+                f"[FAIL] Bitrate too LOW: {measured_mbps:.2f} Mbps "
                 f"(expected ≥ {expected} Mbps)"
             )
             return False
@@ -200,4 +201,6 @@ if __name__ == "__main__":
     }
 
     iperf_manager = IperfManager(TEST)
+    iperf_manager.start_iperf_server()
     iperf_manager.run_iperf_traffic()
+    iperf_manager.stop_iperf_server()
