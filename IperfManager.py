@@ -189,7 +189,6 @@ class IperfManager:
 
         if self.params["Expected_bitrate"] > 0:
             print(f"Expected bitrate: ≥ {self.params['Expected_bitrate']} Mbps")
-            print(f"RESULT          : {result}")
 
         else:
             print("Expected bitrate: not defined")
@@ -208,7 +207,7 @@ class IperfManager:
         return {
             "Measured_Mbps": round(measured, 2),
             "Expected_Mbps": self.params["Expected_bitrate"],
-            "Result": result
+            "Result": "PASS" if result else "FAIL"
         }
 
 

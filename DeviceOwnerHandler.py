@@ -101,6 +101,17 @@ class DeviceOwnerHandler:
         subprocess.run(cmd, check=True)
         print("[OK] App set as Device Owner successfully")
 
+    def install_iperf(self, iperf_files_path):
+        iperf_binaries = os.path.abspath("Iperf_binary/*")
+        iperf_path = "/data/local/tmp/"
+        print("[INFO] Copying Iperf binary files to device storage")
+        cmd_push = self._adb_command("push", iperf_binaries, iperf_path)
+        subprocess.run(cmd_push, check=True)
+        print("[INFO] Setting permissions for Iperf binary files")
+        cmd_permissions = self._adb_command("shell", "chmod +x", iperf_path + "*")
+        subprocess.run(cmd_permissions, check=True)
+        print("[INFO] Execute permissions granted")
+
     # Delay to be sure forward is done
     time.sleep(0.5)
 
