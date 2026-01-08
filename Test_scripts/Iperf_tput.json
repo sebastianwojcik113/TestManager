@@ -14,6 +14,13 @@
     "Timeout": 20
   },
   {
+    "Command": "WIFI_ADD_NETWORK",
+    "SSID": "TEST_5G_CH36_80MHz",
+    "SECURITY_TYPE": "WPA2",
+    "PWD": "testing123",
+    "Timeout": 10
+  },
+  {
     "Command": "WIFI_CONNECT",
     "SSID": "TEST_5G_CH36_80MHz",
     "Timeout": 20
@@ -25,14 +32,14 @@
     "Expected_bitrate": 25,
     "Duration": 10
   },
-   {
+  {
     "Command": "WIFI_DISCONNECT",
-    "SSID": "TEST_5G_CH36_80MHz",
+    "SSID": "TEST_6G_CH37_160MHz",
     "Timeout": 10
   },
   {
     "Command": "WIFI_REMOVE_NETWORK",
-    "SSID": "TEST_5G_CH36_80MHz",
+    "SSID": "TEST_6G_CH37_160MHz",
     "Timeout": 10
   },
   {

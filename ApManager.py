@@ -1,7 +1,7 @@
 import json
 from pkgutil import walk_packages
 
-from ApController import ApController
+from RAXE500 import ApController
 
 class ApManager:
     def __init__(self, ap_ip, username, password, headless=False):

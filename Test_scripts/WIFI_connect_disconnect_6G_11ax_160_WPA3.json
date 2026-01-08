@@ -2,7 +2,7 @@
  {
     "Command": "AP_SETUP",
     "SSID": "TEST_6G_CH37_160MHz",
-    "BAND": "5G",
+    "BAND": "6G",
     "CHANNEL": "37",
     "MODE": "AX",
     "WIDTH": "80",

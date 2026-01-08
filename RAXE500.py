@@ -60,19 +60,19 @@ MODE_MAPPING = {
 # Security element IDs
 SECURITY_MAPPING = {
     "2G": {
-        "NONE": "security_disable",
+        "OPEN": "security_disable",
         "WPA2": "security_wpa2",
         "WPA2/WPA3": "security_auto",
         "WPA3": "security_wpa3"
     },
     "5G": {
-        "NONE": "security_disable",
+        "OPEN": "security_an_disable",
         "WPA2": "security_an_wpa2",
         "WPA2/WPA3": "security_an_auto",
         "WPA3": "security_an_wpa3"
     },
     "6G": {
-        "NONE": "security_an_2_owe",
+        "OWE": "security_an_2_owe",
         "WPA3": "security_an_2_wpa3"
     }
 }
@@ -95,6 +95,8 @@ class ApController:
         if self.headless:
             # run chrome in background
             chrome_options.add_argument("--headless=new")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
 
         # Launch driver with options
         self.driver = webdriver.Chrome(
@@ -430,7 +432,7 @@ class ApController:
             security_button.click()
         except Exception as e:
             print(f"[ERROR] Unable to select expected security type: {e}")
-        if security_type != "NONE":
+        if security_type != "OPEN" or security_type != "OWE":
             if not password or len(password) < 8:
                 raise ValueError(f"[ERROR] Invalid password: must be at least 8 ASCII characters.")
             print(f"[INFO] Password provided for security type {security_type}, setting a new password...")

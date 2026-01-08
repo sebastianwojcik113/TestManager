@@ -2,10 +2,8 @@ import json
 import os
 import subprocess
 import re
-import tempfile
 import time
 
-import iperf3
 
 IPERF_PATH = "/data/local/tmp/iperf3.9"
 IPERF_PORT = "5201"
@@ -91,6 +89,7 @@ class IperfManager:
         self.server_ip = self.get_phone_ip()
         self.start_iperf_server()
 
+        print("DEBUG log_folder_path:", self.log_folder_path, type(self.log_folder_path))
         json_path = os.path.join(self.log_folder_path, "Iperf_result.json")
 
         try:

@@ -32,7 +32,8 @@ if __name__ == '__main__':
 
     #Enable test logs collection
     logCatcher = LogCatcher(dut["ADB_SERIAL"], script)
-    log_folder_path = logCatcher.logcat_start(logCatcher.create_log_directory())
+    log_folder_path = logCatcher.create_log_directory()
+    logCatcher.logcat_start(log_folder_path)
 
 
     # Check port forwarding to communicate with DUT

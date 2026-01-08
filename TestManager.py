@@ -3,7 +3,7 @@ from time import sleep
 
 import ConnectionHandler
 from ApManager import ApManager
-from IperfManager_old import IperfManager
+from IperfManager import IperfManager
 
 
 class TestManager:
@@ -42,13 +42,13 @@ class TestManager:
             # Run AP related commands locally, do not send to TestRunner
             if command_type == "AP_SETUP":
                 self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
-                try:
-                    self.ap_manager.setup_ap_basic(command)
-                    print(f"[INFO] Command \"AP_SETUP\" sent to AP")
-                    response = {"Result": "COMPLETE", "Command_ID": command_id}
-                except Exception as e:
-                    response = {"Result": "ERROR", "Command_ID": command_id}
-                    print(f"[ERROR] AP setup process failed, reason: {e}")
+                # try:
+                self.ap_manager.setup_ap_basic(command)
+                print(f"[INFO] Command \"AP_SETUP\" sent to AP")
+                response = {"Result": "COMPLETE", "Command_ID": command_id}
+                # except Exception as e:
+                #     response = {"Result": "ERROR", "Command_ID": command_id}
+                #     print(f"[ERROR] AP setup process failed, reason: {e}")
 
             elif command_type == "AP_SWITCH_RADIO":
                 self.ap_manager = ApManager(self.apconfig["IP"], self.apconfig["USER"], self.apconfig["PWD"])
@@ -61,24 +61,24 @@ class TestManager:
                     print(f"[ERROR] AP switch radio failed, reason: {e}")
 
             elif command_type == "RUN_TRAFFIC":
-                self.iperf_manager = IperfManager(command)
-                try:
-                    result = self.iperf_manager.run_iperf_traffic()
-                    # stats["Result"] = PASS / FAIL
-                    if result["Result"] == "PASS":
-                        response = {"Result": "COMPLETE", "Command_ID": command_id}
-                        print(f"[PASS] Iperf test passed: {result}")
+                self.iperf_manager = IperfManager(command, self.log_folder_path)
+                # try:
+                result = self.iperf_manager.run_iperf_traffic()
+                # stats["Result"] = PASS / FAIL
+                if result["Result"] == "PASS":
+                    response = {"Result": "COMPLETE", "Command_ID": command_id}
+                    print(f"[PASS] Iperf test passed: {result}")
 
-                    else:
-                        response = {"Result": "ERROR", "Command_ID": command_id}
-                        print(f"[FAIL] Iperf test failed: {result}")
+                    # else:
+                    #     response = {"Result": "ERROR", "Command_ID": command_id}
+                    #     print(f"[FAIL] Iperf test failed: {result}")
 
-                except Exception as e:
-                    response = {
-                        "Result": "ERROR",
-                        "Command_ID": command_id,
-                        "Reason": str(e)
-                    }
+                # except Exception as e:
+                #     response = {
+                #         "Result": "ERROR",
+                #         "Command_ID": command_id,
+                #         "Reason": str(e)
+                #     }
 
             # handle Delay command - just wait for desired time
             elif command_type == "DELAY":

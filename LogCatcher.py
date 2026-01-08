@@ -1,6 +1,11 @@
 import datetime
 import os
 import subprocess
+from pathlib import Path
+from datetime import datetime
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+LOGS_ROOT = PROJECT_ROOT / "Logs"
 
 class LogCatcher:
     def __init__(self, adb_serial, script_name):
@@ -9,16 +14,26 @@ class LogCatcher:
         self.log_file = None
         self.logcat_proc = None
         self.logcat_flush = None
+        self.project_root = Path(__file__).resolve().parent
+        self.logs_root = self.project_root / "Logs"
+        self.logs_root.mkdir(exist_ok=True)
 
     def create_log_directory(self):
-        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
-        script_name = self.script.split(".")[0]
-        folder_name = script_name + "_" + timestamp
-        print("[LogCatcher] Test logs folder: ", folder_name)
-        os.makedirs(folder_name, exist_ok=True)
-        log_folder_path = os.path.join(os.getcwd(), folder_name)
-        print("[LogCatcher] Absolute test log folder path: ", log_folder_path)
-        return log_folder_path
+        test_name = Path(self.script).stem
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        log_dir = self.logs_root / f"{test_name}_{timestamp}"
+        log_dir.mkdir(parents=True, exist_ok=True)
+
+        return str(log_dir)
+    # timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+        # script_name = self.script.split(".")[0]
+        # folder_name = script_name + "_" + timestamp
+        # print("[LogCatcher] Test logs folder: ", folder_name)
+        # os.makedirs(folder_name, exist_ok=True)
+        # log_folder_path = os.path.join(os.getcwd(), folder_name)
+        # print("[LogCatcher] Absolute test log folder path: ", log_folder_path)
+        # return log_folder_path
 
     def logcat_start(self, log_folder_path):
         log_path = os.path.join(log_folder_path, "logcat.txt")
